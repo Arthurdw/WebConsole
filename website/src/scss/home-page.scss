@@ -1,0 +1,189 @@
+// ©Arthurdw - MIT //
+
+$backgroundColor: #118ab2;
+$consoleBackgroundColor: #073b4c;
+$consoleHeaderColor: #7cd5f3;
+
+$consoleHeaderTextColor: #ecf9fd;
+
+$consoleHeaderMinimizeColor: #06d6a0;
+$consoleHeaderSizeSwitchColor: #ffd166;
+$consoleHeaderCloseColor: #ef476f;
+
+$consoleFont: 'Baloo Tamma 2',
+cursive;
+$consoleTextFont: 'Source Code Pro',
+monospace;
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba($backgroundColor, $alpha: 1.0);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+:-webkit-scrollbar-track {
+    background: rgba($color: #000000, $alpha: 0);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba($backgroundColor, $alpha: 0.3);
+    transition: background ease-in-out 0.5s;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba($backgroundColor, $alpha: 0.5);
+}
+
+// Console //
+.console-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+
+    .console {
+        position: relative;
+        background-color: rgba($consoleBackgroundColor, $alpha: 1.0);
+        min-width: 800px;
+        min-height: 500px;
+        width: 60vw;
+        height: 60vh;
+        max-width: 1200px;
+        max-height: 900px;
+        border-radius: 5px;
+
+        .header {
+            width: 100%;
+            height: 24px;
+            background-color: rgba($consoleHeaderColor, $alpha: 0.7);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+
+            .menu-wrapper {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                position: absolute;
+                right: 0;
+
+                .menu {
+                    $menuHeight: 16px;
+
+                    width: 80px;
+                    height: $menuHeight;
+                    display: flex;
+                    justify-content: space-evenly;
+
+                    div {
+                        width: $menuHeight;
+                        height: $menuHeight;
+                        border-radius: 50%;
+                        transition: all 0.1s ease-in-out;
+                    }
+
+                    div:hover {
+                        cursor: pointer;
+                        opacity: 0.8;
+                    }
+
+                    .minimize {
+                        background-color: rgba($consoleHeaderMinimizeColor, $alpha: 1.0);
+                    }
+
+                    .size-switch {
+                        background-color: rgba($consoleHeaderSizeSwitchColor, $alpha: 1.0);
+                    }
+
+                    .close {
+                        background-color: rgba($consoleHeaderCloseColor, $alpha: 1.0);
+                    }
+                }
+            }
+
+            .application-name-wrapper {
+                position: absolute;
+                left: 8px;
+                color: rgba($consoleHeaderTextColor, $alpha: 1.0);
+                font-family: $consoleFont;
+                cursor: default;
+                user-select: none;
+
+                .application-name {
+                    display: flex;
+                    height: 24px;
+                    align-items: center;
+
+                    p {
+                        margin: 0;
+                        padding: 0;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+
+        .ui {
+            position: absolute;
+            top: 32px;
+            left: 8px;
+            font-family: $consoleTextFont;
+            color: rgba($consoleHeaderTextColor, $alpha: 1.0);
+            height: calc(100% - 40px);
+            max-height: calc(100% - 40px);
+            width: calc(100% - 16px);
+            max-width: calc(100% - 16px);
+            display: flex;
+            flex-direction: column-reverse;
+            overflow: scroll;
+            overflow-x: hidden;
+            font-size: 16px;
+
+            p {
+                margin: 0;
+                padding: 0;
+
+            }
+
+            .pre {
+                user-select: none;
+                width: fit-content;
+                color: rgba($consoleHeaderTextColor, $alpha: 0.5);
+            }
+
+            .inp {
+                .pre,
+                .data {
+                    float: left;
+                }
+
+                .data {
+                    margin-left: 10px;
+                    width: calc(100% - 140px);
+                    outline: none;
+                }
+
+                textarea {
+                    resize: none;
+                    overflow: hidden;
+                    border: 0;
+                    font-size: 16px;
+                    line-height: 20px;
+                    outline: none;
+                    background-color: transparent;
+                    height: auto;
+                    color: rgba($consoleHeaderTextColor, $alpha: 1.0);
+                    font-family: $consoleFont;
+                    caret-color: rgba($consoleHeaderTextColor, $alpha: 1.0);
+                }
+            }
+        }
+    }
+}
