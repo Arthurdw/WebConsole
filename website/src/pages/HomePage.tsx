@@ -1,17 +1,42 @@
 // ©Arthurdw - MIT //
 import React from "react";
+import socketIOClient from "socket.io-client";
 
 import "../scss/home-page.scss";
 
+const ENDPOINT = "http://127.0.0.1:6750";
+
 class HomePage extends React.Component<{}, any> {
   pre_wrapper = "User/Console> ";
+  socket = socketIOClient(ENDPOINT);
+  interval: number;
   constructor(props: object) {
     super(props);
+    this.interval = 0;
     this.state = {
+      connected: false,
       keys: [],
       command: "",
       data: [],
     };
+    this.handleSocketStatus();
+  }
+
+  handleSocketStatus() {
+    this.socket.on("connect", () => {
+      this.setState({ connected: true });
+      this.socket.on("disconnect", () => {
+        this.setState({ connected: false });
+      });
+    });
+  }
+
+  handleSocket(message: string) {
+    this.socket.emit("command", { cmd: message, data: this.state.data });
+    this.socket.on("command-receive", (received: Array<String>) => {
+      this.setState({ data: received });
+    });
+    return () => this.socket.disconnect();
   }
 
   getNumberArray(arr: Array<number>) {
@@ -30,11 +55,21 @@ class HomePage extends React.Component<{}, any> {
         <div className="console-wrapper">
           <div className="console">
             <div className="header">
-              {/* <div className="application-name-wrapper">
+              <div className="application-name-wrapper">
                 <div className="application-name">
-                  <p>Hello World!</p>
+                  {this.state.connected && (
+                    <p>Personal console running on {this.socket.id}</p>
+                  )}
+                  {!this.state.connected && (
+                    <p>
+                      Oops, couldn't connect to servers... Contact support at{" "}
+                      <a href="http://dc.xiler.net" target="_blanc">
+                        dc.xiler.net
+                      </a>
+                    </p>
+                  )}
                 </div>
-              </div> */}
+              </div>
               <div className="menu-wrapper">
                 <div className="menu">
                   <div className="minimize"></div>
@@ -76,12 +111,13 @@ class HomePage extends React.Component<{}, any> {
                       }
                       const command = this.state.command.trim();
                       this.setState({
-                        data: [command, ...this.state.data],
+                        data: [
+                          { data: command, console: true },
+                          ...this.state.data,
+                        ],
                         command: "",
                       });
-                      if (command === "cls" || command === "clear") {
-                        this.setState({ data: [command] });
-                      }
+                      this.handleSocket(command);
                     }
                   }}
                   onKeyUp={(event) => {
@@ -91,12 +127,16 @@ class HomePage extends React.Component<{}, any> {
                   }}
                 ></textarea>
               </div>
-              {this.state.data.map((item: string, index: number) => (
-                <p key={index}>
-                  <span className="pre">{this.pre_wrapper}</span>
-                  {item}
-                </p>
-              ))}
+              {this.state.data.map(
+                (item: { data: string; console: boolean }, index: number) => (
+                  <p key={index}>
+                    {item.console && (
+                      <span className="pre">{this.pre_wrapper}</span>
+                    )}
+                    {item.data}
+                  </p>
+                )
+              )}
             </div>
           </div>
         </div>

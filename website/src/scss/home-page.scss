@@ -125,6 +125,11 @@ body {
                         margin: 0;
                         padding: 0;
                         height: 100%;
+
+                        a {
+                            text-decoration: none;
+                            color: rgba($consoleHeaderCloseColor, $alpha: 1);
+                        }
                     }
                 }
             }
